@@ -56,5 +56,3 @@ type DesktopEntry struct {
 func EntryString(name, path string) string {
 	return name + ":" + path
 }
-
-
