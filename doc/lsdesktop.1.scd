@@ -2,7 +2,7 @@ LSDESKTOP(1)
 
 # NAME
 
-lsdesktop - list XDG desktop entries with recency-based ordering
+lsdesktop - list XDG desktop entries, recent first
 
 # SYNOPSIS
 
@@ -10,33 +10,34 @@ lsdesktop - list XDG desktop entries with recency-based ordering
 
 # DESCRIPTION
 
-*lsdesktop* reads .desktop files from the standard XDG data directories
-and prints visible entries as _name:path_ pairs.  Entries are ordered by
-most recently launched first, using the history file maintained by
-*desklaunch*(1).
+Lists .desktop files from the standard XDG application directories,
+printing visible entries as _name:path_. Output is sorted by most
+recently launched first, using the history file maintained by
+*desklaunch*(1). Before anything has been launched, order follows the
+filesystem.
 
 Hidden, NoDisplay, and Terminal entries are omitted.
 
 # FILES
 
-- _$HOME/.cache/lsdesktop/history_
-	Launch history.  Updated by *desklaunch*(1), read by *lsdesktop* to
-	order output.
+_$HOME/.cache/lsdesktop/history_
+	Launch history. Updated by *desklaunch*(1), read by *lsdesktop*
+	to order output.
 
 # ENVIRONMENT
 
-- *XDG_DATA_HOME*
+_XDG_DATA_HOME_
 	Defaults to _$HOME/.local/share_.
 
-- *XDG_DATA_DIRS*
+_XDG_DATA_DIRS_
 	Defaults to _/usr/local/share:/usr/share_.
 
 # EXIT STATUS
 
-- 0
-	Successful execution.
+*0*
+	Success.
 
-- 1
+*1*
 	An error occurred.
 
 # SEE ALSO
@@ -45,4 +46,4 @@ Hidden, NoDisplay, and Terminal entries are omitted.
 
 # AUTHORS
 
-Maintained by the lsdesktop authors.
+Written by Francois Lachese.

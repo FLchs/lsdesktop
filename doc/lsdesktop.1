@@ -9,7 +9,7 @@
 .PP
 .SH NAME
 .PP
-lsdesktop - list XDG desktop entries with recency-based ordering
+lsdesktop - list XDG desktop entries, recent first
 .PP
 .SH SYNOPSIS
 .PP
@@ -17,66 +17,50 @@ lsdesktop - list XDG desktop entries with recency-based ordering
 .PP
 .SH DESCRIPTION
 .PP
-\fBlsdesktop\fR reads .\&desktop files from the standard XDG data directories
-and prints visible entries as \fIname:path\fR pairs.\&  Entries are ordered by
-most recently launched first, using the history file maintained by
-\fBdesklaunch\fR(1).\&
+Lists .\&desktop files from the standard XDG application directories,
+printing visible entries as \fIname:path\fR.\& Output is sorted by most
+recently launched first, using the history file maintained by
+\fBdesklaunch\fR(1).\& Before anything has been launched, order follows the
+filesystem.\&
 .PP
 Hidden, NoDisplay, and Terminal entries are omitted.\&
 .PP
 .SH FILES
 .PP
-.PD 0
-.IP \(bu 4
 \fI$HOME/.\&cache/lsdesktop/history\fR
 .RS 4
-.PD
-.RE
-Launch history.\&  Updated by \fBdesklaunch\fR(1), read by \fBlsdesktop\fR to
-.RS 4
-order output.\&
+Launch history.\& Updated by \fBdesklaunch\fR(1), read by \fBlsdesktop\fR
+to order output.\&
 .PP
 .RE
 .SH ENVIRONMENT
 .PP
-.PD 0
-.IP \(bu 4
-\fBXDG_DATA_HOME\fR
+\fIXDG_DATA_HOME\fR
 .RS 4
-.PD
-.RE
 Defaults to \fI$HOME/.\&local/share\fR.\&
 .PP
-.PD 0
-.IP \(bu 4
-\fBXDG_DATA_DIRS\fR
-.RS 4
-.PD
 .RE
+\fIXDG_DATA_DIRS\fR
+.RS 4
 Defaults to \fI/usr/local/share:/usr/share\fR.\&
 .PP
+.RE
 .SH EXIT STATUS
 .PP
-.PD 0
-.IP \(bu 4
-0
+\fB0\fR
 .RS 4
-.PD
-.RE
-Successful execution.\&
+Success.\&
 .PP
-.PD 0
-.IP \(bu 4
-1
-.RS 4
-.PD
 .RE
+\fB1\fR
+.RS 4
 An error occurred.\&
 .PP
+.RE
 .SH SEE ALSO
 .PP
 \fBdesklaunch\fR(1), \fBfzf\fR(1)
 .PP
 .SH AUTHORS
 .PP
-Maintained by the lsdesktop authors.\&
+Written by Francois Lachese.\&

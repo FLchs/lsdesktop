@@ -9,7 +9,7 @@
 .PP
 .SH NAME
 .PP
-desklaunch - launch or inspect a single XDG desktop entry
+desklaunch - launch a .\&desktop file
 .PP
 .SH SYNOPSIS
 .PP
@@ -17,57 +17,47 @@ desklaunch - launch or inspect a single XDG desktop entry
 .PP
 .SH DESCRIPTION
 .PP
-\fBdesklaunch\fR parses the .\&desktop file at \fIpath\fR, extracts the \fIExec=\fR
-line, strips field codes per the Desktop Entry specification, and starts
-the command in the background.\&
+Reads the .\&desktop file at \fIpath\fR, strips field codes from the Exec
+line, and runs the command in the background.\&
 .PP
-With the \fB-p\fR flag the command is printed to stdout instead of executed.\&
+With the \fB-p\fR flag the command is printed to stdout instead of
+executed.\& This is useful for inspecting the command or piping it to
+another tool.\&
 .PP
-Both modes update the launch history file so that \fBlsdesktop\fR(1) ordering
-stays current.\&
+Both modes update the shared history file, which affects ordering in
+\fBlsdesktop\fR(1).\&
 .PP
 .SH OPTIONS
 .PP
-.PD 0
-.IP \(bu 4
 \fB-p\fR
 .RS 4
-.PD
-.RE
-Print the cleaned exec command to stdout without running it.\&
+Print the cleaned exec command.\& Do not run it.\&
 .PP
+.RE
 .SH FILES
 .PP
-.PD 0
-.IP \(bu 4
 \fI$HOME/.\&cache/lsdesktop/history\fR
 .RS 4
-.PD
-.RE
-Launch history.\&  Updated by \fBdesklaunch\fR, read by \fBlsdesktop\fR(1).\&
+Shared launch history.\& Written by \fBdesklaunch\fR, read by
+\fBlsdesktop\fR(1).\&
 .PP
+.RE
 .SH EXIT STATUS
 .PP
-.PD 0
-.IP \(bu 4
-0
+\fB0\fR
 .RS 4
-.PD
-.RE
-Successful execution.\&
+Success.\&
 .PP
-.PD 0
-.IP \(bu 4
-1
-.RS 4
-.PD
 .RE
+\fB1\fR
+.RS 4
 Usage error, missing argument, or command failure.\&
 .PP
+.RE
 .SH SEE ALSO
 .PP
 \fBlsdesktop\fR(1), \fBdesktop-file-validate\fR(1)
 .PP
 .SH AUTHORS
 .PP
-Maintained by the lsdesktop authors.\&
+Written by Francois Lachese.\&
