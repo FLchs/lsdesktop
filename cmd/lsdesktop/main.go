@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"flc/lsdesktop/internal/desktop"
-	"flc/lsdesktop/internal/history"
+	"github.com/FLchs/lsdesktop/internal/desktop"
+	"github.com/FLchs/lsdesktop/internal/history"
 )
 
 func appDirs() []string {
