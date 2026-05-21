@@ -8,17 +8,14 @@ import (
 	"strings"
 )
 
-// PrintExec outputs the exec command to stdout and updates history.
-func PrintExec(path string) error {
-
-	// read desktop entry
+// Launch parses the desktop entry at path and starts it in the background.
+func Launch(path string) error {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return fmt.Errorf("read desktop entry: %w", err)
 	}
 
-	var name string
-	var exec string
+	var name, execLine, tryExec, workDir string
 
 	for line := range strings.Lines(string(data)) {
 		line = strings.TrimSpace(line)
@@ -28,19 +25,39 @@ func PrintExec(path string) error {
 				name = strings.TrimSpace(v)
 			}
 		}
-		if exec == "" {
+		if execLine == "" {
 			if v, ok := strings.CutPrefix(line, "Exec="); ok {
-				exec = desktop.CleanExec(strings.TrimSpace(v))
-				// TODO: wrap in something if Terminal=true
-				fmt.Println(exec)
+				execLine = strings.TrimSpace(v)
 			}
 		}
-
+		if tryExec == "" {
+			if v, ok := strings.CutPrefix(line, "TryExec="); ok {
+				tryExec = strings.TrimSpace(v)
+			}
+		}
+		if workDir == "" {
+			if v, ok := strings.CutPrefix(line, "Path="); ok {
+				workDir = strings.TrimSpace(v)
+			}
+		}
 	}
 
+	if execLine == "" {
+		return fmt.Errorf("no Exec line found in %s", path)
+	}
+
+	cmd, err := desktop.BuildCmd(execLine, workDir, tryExec)
+	if err != nil {
+		return fmt.Errorf("build command: %w", err)
+	}
+
+	if err := cmd.Start(); err != nil {
+		return fmt.Errorf("start command: %w", err)
+	}
+
+	// Update history using the same logic as Print.
 	entry := desktop.EntryString(name, path)
 
-	// read history (ignore missing file)
 	hist, err := history.ReadHistory()
 	if err != nil {
 		return fmt.Errorf("read history: %w", err)
@@ -51,7 +68,6 @@ func PrintExec(path string) error {
 	out = append(out, entry)
 
 	for x := range strings.SplitSeq(hist, "\n") {
-		// only append if not a duplicate of the last added line
 		if x == entry {
 			continue
 		}
@@ -59,8 +75,6 @@ func PrintExec(path string) error {
 	}
 
 	historyContent := strings.Join(out, "\n")
-
-	// rewrite history file
 	if err := history.WriteHistory(historyContent); err != nil {
 		return fmt.Errorf("write history: %w", err)
 	}
