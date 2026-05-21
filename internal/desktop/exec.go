@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"syscall"
 )
 
 // https://specifications.freedesktop.org/desktop-entry-spec/latest/exec-variables.html
@@ -119,17 +120,16 @@ func parseExec(execLine string) ([]string, error) {
 	return args, nil
 }
 
+const xOK = 1 // syscall.X_OK is not exported on all platforms; POSIX defines it as 1.
+
 func checkTryExec(name string) error {
+	// Use syscall.Access with xOK instead of checking mode bits.
+	// Mode bits only tell us that *someone* can execute the file,
+	// but Access checks whether the *current user* actually can.
+	// This matters on multi-user systems or when permissions are tight.
 	if strings.Contains(name, string(os.PathSeparator)) {
-		info, err := os.Stat(name)
-		if err != nil {
-			return fmt.Errorf("tryexec not found: %s", name)
-		}
-		if info.IsDir() {
-			return fmt.Errorf("tryexec is a directory: %s", name)
-		}
-		if info.Mode()&0o111 == 0 {
-			return fmt.Errorf("tryexec not executable: %s", name)
+		if err := syscall.Access(name, xOK); err != nil {
+			return fmt.Errorf("tryexec not found or not executable: %s", name)
 		}
 		return nil
 	}
@@ -140,14 +140,7 @@ func checkTryExec(name string) error {
 			continue
 		}
 		full := dir + string(os.PathSeparator) + name
-		info, err := os.Stat(full)
-		if err != nil {
-			continue
-		}
-		if info.IsDir() {
-			continue
-		}
-		if info.Mode()&0o111 != 0 {
+		if err := syscall.Access(full, xOK); err == nil {
 			return nil
 		}
 	}
