@@ -1,13 +1,14 @@
-package commands
+package main
 
 import (
-	"flc/lsdesktop/internal/desktop"
-	"flc/lsdesktop/internal/history"
 	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"flc/lsdesktop/internal/desktop"
+	"flc/lsdesktop/internal/history"
 )
 
 func appDirs() []string {
@@ -36,15 +37,13 @@ func appDirs() []string {
 	return dirs
 }
 
-func List() {
+func main() {
 	hist, _ := history.ReadHistory()
 
-	// show history before listing remaining applications
 	if hist != "" {
 		fmt.Println(hist)
 	}
 
-	// build a set of applications from the history file
 	seen := make(map[string]struct{})
 	for entry := range strings.SplitSeq(hist, "\n") {
 		if n := strings.TrimSpace(entry); n != "" {
@@ -55,12 +54,10 @@ func List() {
 
 	var apps []desktop.DesktopEntry
 
-	// walk XDG application directories in precedence order
 	for _, rootDir := range appDirs() {
 		dir := os.DirFS(rootDir)
 
 		fs.WalkDir(dir, ".", func(filePath string, d fs.DirEntry, err error) error {
-			// skip directories and non-desktop files
 			if err != nil || d.IsDir() || !strings.HasSuffix(filePath, ".desktop") {
 				return nil
 			}
@@ -75,7 +72,6 @@ func List() {
 				return nil
 			}
 
-			// skip apps already seen in history or a higher-precedence dir
 			if _, ok := seen[entry.Name]; ok {
 				return nil
 			}
@@ -88,7 +84,6 @@ func List() {
 		})
 	}
 
-	// output the result minus the ones from history
 	for _, app := range apps {
 		fmt.Println(desktop.EntryString(app.Name, app.Path))
 	}
