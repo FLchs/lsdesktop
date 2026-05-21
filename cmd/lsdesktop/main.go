@@ -38,7 +38,11 @@ func appDirs() []string {
 }
 
 func main() {
-	hist, _ := history.ReadHistory()
+	hist, err := history.ReadHistory()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: read history: %v\n", err)
+		os.Exit(1)
+	}
 
 	if hist != "" {
 		fmt.Println(hist)
