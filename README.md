@@ -1,36 +1,48 @@
 # lsdesktop
 
-Two small utilities for listing and launching XDG desktop entries that are meant to be used together.
+Two small utilities for working with XDG desktop entries.
 
-`lsdesktop` prints visible .desktop files as name:path, ordered by most
-recently launched first.
+`lsdesktop` lists visible .desktop files as name:path, with the most
+recently launched shown first.
 
-`desklaunch` parses a single .desktop file and launches it,
-or prints its cleaned Exec command with `-p`.  
-Both update the shared history file (to display the most recent items first on lsdesktop).
+`desklaunch` parses a single .desktop file and runs it, or prints the
+cleaned exec command with `-p`. Both update the shared history so
+`lsdesktop` knows what you launched last.
 
-## Building
+## Installation
 
-    go build ./cmd/...
+With Go:
 
-## Quick start
+    go install github.com/FLchs/lsdesktop/cmd/...@latest
 
-list .desktop applications:
-`lsdesktop`
+From source:
 
-Launch firefox:
-`desklaunch /usr/share/applications/firefox.desktop`
+    git clone https://github.com/FLchs/lsdesktop.git
+    cd lsdesktop
+    make
+    sudo make install
 
-Print the cleaned exec command to start firefox with dex, gtk-launch or whatever suit you while still keeping the history updated:
-`desklaunch -p /usr/share/applications/firefox.desktop`
+`make install` respects `PREFIX` (defaults to `/usr/local`) and puts
+man pages where they belong.
 
-Interactive picker with fzf:
-`desklaunch $(lsdesktop | fzf --with-nth={1} --accept-nth=2 -d : --tiebreak=begin)`
+## Usage
 
-## Documentation
+List applications:
 
-Manual pages are in `doc/`
+    lsdesktop
+
+Launch one:
+
+    desklaunch /usr/share/applications/firefox.desktop
+
+Print the command without running it:
+
+    desklaunch -p /usr/share/applications/firefox.desktop
+
+Use with fzf for an interactive picker:
+
+    desklaunch $(lsdesktop | fzf --with-nth={1} --accept-nth=2 -d : --tiebreak=begin)
 
 ## License
 
-GPL v3.  See LICENSE.
+GPL v3. See LICENSE.
