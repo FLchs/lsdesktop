@@ -9,7 +9,7 @@ recently launched shown first.
 cleaned exec command with `-p`. Both update the shared history so
 `lsdesktop` knows what you launched last.
 
-This is mostly tradcoded, but some parts were AI-assisted and carefully
+This is mostly *tradcoded*, but some parts were AI-assisted (mostly tests and regexes :))  and carefully
 reviewed. It is a learning project. (Ironically, this paragraph was
 partly LLM-generated.)
 
