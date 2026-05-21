@@ -37,7 +37,7 @@ func ParseEntry(data string) (DesktopEntry, bool) {
 
 func CleanExec(execLine string) string {
 	// regex of exec arguments : https://specifications.freedesktop.org/desktop-entry/latest/exec-variables.html
-	reFieldCodes := regexp.MustCompile(`['"]?%[uUfFick]['"]?`)
+	reFieldCodes := regexp.MustCompile(`['"]?%[fFuUdDnNiickvm]['"]?`)
 	cleaned := reFieldCodes.ReplaceAllString(execLine, "")
 
 	cleaned = strings.ReplaceAll(cleaned, "%%", "%")
