@@ -92,6 +92,10 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Error: no Exec line found in %s\n", path)
 		os.Exit(1)
 	}
+	if name == "" {
+		fmt.Fprintf(os.Stderr, "Error: no Name line found in %s\n", path)
+		os.Exit(1)
+	}
 
 	if err := updateHistory(name, path); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
