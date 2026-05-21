@@ -1,61 +1,36 @@
-LSDESKTOP(1)                 General Commands Manual                LSDESKTOP(1)
+# lsdesktop
 
-NAME
-       lsdesktop -- list and launch XDG desktop entries
+Two small utilities for listing and launching XDG desktop entries that are meant to be used together.
 
-SYNOPSIS
-       lsdesktop [list]
-       lsdesktop launch <path>
-       lsdesktop print <path>
+`lsdesktop` prints visible .desktop files as name:path, ordered by most
+recently launched first.
 
-DESCRIPTION
-       lsdesktop reads .desktop files from the standard XDG data directories
-       and prints visible entries as name:path pairs.  Entries are ordered by
-       most recently launched first.
+`desklaunch` parses a single .desktop file and launches it,
+or prints its cleaned Exec command with `-p`.  
+Both update the shared history file (to display the most recent items first on lsdesktop).
 
-       launch parses the Exec line, strips field codes per the Desktop Entry
-       specification, and starts the command in the background.  print outputs
-       the cleaned Exec command to stdout without running it.  Both update the
-       history file.
+## Building
 
-COMMANDS
-       list          Print visible desktop entries as name:path.  Most
-                     recently used entries appear first.  This is the default
-                     when no command is given.
+    go build ./cmd/...
 
-       launch path   Parse the .desktop file at path and execute it.  Updates
-                     the history file.
+## Quick start
 
-       print path    Print the exec command for the .desktop file at path.
-                     Updates the history file.
+list .desktop applications:
+`lsdesktop`
 
-FILES
-       ~/.cache/lsdesktop/history
-                     Launch history.  Updated on each launch, used to order
-                     list output.
+Launch firefox:
+`desklaunch /usr/share/applications/firefox.desktop`
 
-ENVIRONMENT
-       XDG_DATA_HOME   Defaults to ~/.local/share.
-       XDG_DATA_DIRS   Defaults to /usr/local/share:/usr/share.
+Print the cleaned exec command to start firefox with dex, gtk-launch or whatever suit you while still keeping the history updated:
+`desklaunch -p /usr/share/applications/firefox.desktop`
 
-EXIT STATUS
-       0       Successful execution.
-       1       Usage error, missing argument, or command failure.
+Interactive picker with fzf:
+`desklaunch $(lsdesktop | fzf --with-nth={1} --accept-nth=2 -d : --tiebreak=begin)`
 
-EXAMPLES
-       List entries ordered by recency:
+## Documentation
 
-              lsdesktop list
+Manual pages are in `doc/`
 
-       Launch a specific application:
+## License
 
-              lsdesktop launch /usr/share/applications/firefox.desktop
-
-       Interactive launcher with fzf:
-
-              APP=$(lsdesktop list | fzf --with-nth=1 --accept-nth=2 -d : \
-                      --tiebreak=begin)
-              [ -n "$APP" ] && lsdesktop launch "$APP"
-
-LICENSE
-       GPL v3.  See LICENSE.
+GPL v3.  See LICENSE.
