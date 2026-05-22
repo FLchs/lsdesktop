@@ -38,6 +38,12 @@ func BuildCmd(execLine, path, tryExec string) (*exec.Cmd, error) {
 	}
 
 	cmd := exec.Command(args[0], args[1:]...)
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		Setsid: true,
+	}
+	cmd.Stdin = nil
+	cmd.Stdout = nil
+	cmd.Stderr = nil
 	if path != "" {
 		cmd.Dir = path
 	}
