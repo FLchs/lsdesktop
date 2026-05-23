@@ -43,9 +43,13 @@ Print the command without running it:
 
     desklaunch -p /usr/share/applications/firefox.desktop
 
-Use with fzf for an interactive picker:
+For example, use with fzf for an interactive picker. `lsdesktop` pipes
+name:path pairs into fzf, which shows only the name (`--with-nth={1}`)
+and passes the path (`--accept-nth=2`) to `desklaunch`:
 
     desklaunch $(lsdesktop | fzf --with-nth={1} --accept-nth=2 -d : --tiebreak=begin)
+
+An example script is provided as `fzf-launcher.sh` in the repo root.
 
 ## License
 
