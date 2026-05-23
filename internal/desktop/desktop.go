@@ -8,6 +8,7 @@ import (
 func ParseEntry(data string) (DesktopEntry, bool) {
 	var name string
 	visible := true
+	var entry DesktopEntry
 
 	for line := range strings.SplitSeq(data, "\n") {
 		line = strings.TrimSpace(line)
@@ -30,6 +31,20 @@ func ParseEntry(data string) (DesktopEntry, bool) {
 				visible = false
 			}
 		}
+		if v, ok := strings.CutPrefix(line, "OnlyShowIn="); ok {
+			for s := range strings.SplitSeq(v, ";") {
+				if s != "" {
+					entry.OnlyShowIn = append(entry.OnlyShowIn, s)
+				}
+			}
+		}
+		if v, ok := strings.CutPrefix(line, "NotShowIn="); ok {
+			for s := range strings.SplitSeq(v, ";") {
+				if s != "" {
+					entry.NotShowIn = append(entry.NotShowIn, s)
+				}
+			}
+		}
 	}
 
 	return DesktopEntry{Name: name}, visible && name != ""
@@ -49,8 +64,10 @@ func CleanExec(execLine string) string {
 }
 
 type DesktopEntry struct {
-	Name string
-	Path string
+	Name       string
+	Path       string
+	OnlyShowIn []string
+	NotShowIn  []string
 }
 
 func EntryString(name, path string) string {

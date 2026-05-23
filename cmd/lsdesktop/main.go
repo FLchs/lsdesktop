@@ -5,11 +5,20 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/FLchs/lsdesktop/internal/desktop"
 	"github.com/FLchs/lsdesktop/internal/history"
 )
+
+func currentDesktops() []string {
+	val := os.Getenv("XDG_CURRENT_DESKTOP")
+	if val == "" {
+		return nil
+	}
+	return strings.Split(val, ":")
+}
 
 func appDirs() []string {
 	dirs := make([]string, 0, 4)
@@ -38,6 +47,8 @@ func appDirs() []string {
 }
 
 func main() {
+	desktops := currentDesktops()
+
 	hist, err := history.ReadHistory()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: read history: %v\n", err)
@@ -73,6 +84,17 @@ func main() {
 
 			entry, ok := desktop.ParseEntry(string(data))
 			if !ok {
+				return nil
+			}
+
+			if len(entry.OnlyShowIn) > 0 && !slices.ContainsFunc(entry.OnlyShowIn, func(s string) bool {
+				return slices.Contains(desktops, s)
+			}) {
+				return nil
+			}
+			if len(entry.NotShowIn) > 0 && slices.ContainsFunc(entry.NotShowIn, func(s string) bool {
+				return slices.Contains(desktops, s)
+			}) {
 				return nil
 			}
 
